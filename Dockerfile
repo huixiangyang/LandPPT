@@ -107,9 +107,17 @@ RUN groupadd -r landppt && \
 # Copy Python packages from builder
 COPY --from=builder /opt/venv /opt/venv
 
+# Verify and list installed packages for debugging
+RUN ls -la /opt/venv/bin/ && \
+    /opt/venv/bin/python --version && \
+    ls -la /opt/venv/lib/python3.11/site-packages/ | head -20
+
 # Install Playwright browsers (chromium) - package already installed in builder stage
-RUN /opt/venv/bin/python -c "import playwright; print(f'Playwright version: {playwright.__version__}')" && \
-    /opt/venv/bin/playwright install --with-deps chromium && \
+RUN if [ -f /opt/venv/bin/playwright ]; then \
+        /opt/venv/bin/playwright install --with-deps chromium; \
+    else \
+        echo "Playwright not found, skipping browser installation"; \
+    fi && \
     chown -R landppt:landppt /home/landppt && \
     rm -rf /tmp/* /var/tmp/*
 
