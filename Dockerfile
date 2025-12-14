@@ -28,11 +28,13 @@ COPY pyproject.toml uv.lock* README.md ./
 COPY src/ ./src/
 
 # Install Python dependencies using uv
-# uv sync will create venv at UV_PROJECT_ENVIRONMENT and install all dependencies
-RUN uv sync && \
+# Create venv and install all dependencies
+RUN uv venv /opt/venv && \
+    . /opt/venv/bin/activate && \
+    uv pip install -e . && \
     uv pip install apryse-sdk>=11.5.0 --extra-index-url=https://pypi.apryse.com && \
     # Verify key packages are installed
-    /opt/venv/bin/python -c "import uvicorn; import playwright; import fastapi" && \
+    /opt/venv/bin/python -c "import uvicorn; import playwright; import fastapi; print('✅ All key packages imported successfully')" && \
     # Clean up build artifacts
     find /opt/venv -name "*.pyc" -delete && \
     find /opt/venv -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
