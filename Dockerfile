@@ -70,10 +70,29 @@ RUN apt-get update && \
     libfontconfig1 \
     libx11-6 \
     libxext6 \
+    # Playwright dependencies
+    libnss3 \
+    libnspr4 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libdbus-1-3 \
+    libxkbcommon0 \
+    libatspi2.0-0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxrandr2 \
+    libgbm1 \
+    libasound2 \
+    libpango-1.0-0 \
+    libcairo2 \
     && \
     # Download and install wkhtmltopdf from official releases
     WKHTMLTOPDF_VERSION="0.12.6.1-3" && \
-    wget -q "https://github.com/wkhtmltopdf/packaging/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox_${WKHTMLTOPDF_VERSION}.bookworm_amd64.deb" -O /tmp/wkhtmltox.deb && \
+    ARCH=$(dpkg --print-architecture) && \
+    wget -q "https://github.com/wkhtmltopdf/packaging/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox_${WKHTMLTOPDF_VERSION}.bookworm_${ARCH}.deb" -O /tmp/wkhtmltox.deb && \
     dpkg -i /tmp/wkhtmltox.deb || apt-get install -f -y && \
     rm /tmp/wkhtmltox.deb && \
     fc-cache -fv && \
