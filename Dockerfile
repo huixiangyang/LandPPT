@@ -151,4 +151,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=2 \
 
 # Set entrypoint and command
 ENTRYPOINT ["./docker-entrypoint.sh"]
-CMD ["python", "run.py"]
+CMD ["/opt/venv/bin/python", "run.py"]
